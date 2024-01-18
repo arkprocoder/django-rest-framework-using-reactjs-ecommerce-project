@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {Link,useParams} from 'react-router-dom'
 import {Row, Col, Image,ListGroup,Button,Card,Container} from 'react-bootstrap'
 import Rating from '../Rating'
-import axios from "axios";
-
+import { listProductDetails } from "../../actions/productsActions";
+import {useDispatch,useSelector} from 'react-redux'
+import Loader from "../Loader";
+import Message from "../Message";
 
 function ProductScreen({params}) {
     const {id}= useParams()
-    const [product, setProduct ] = useState([]);
-
+    const dispatch=useDispatch()
+    const productDetails = useSelector((state)=>state.productDetails);
+    const {error,loading,product}=productDetails
   useEffect(() => {
-    async function fetchproduct() {
-      const { data } = await axios.get(`/api/product/${id}`);
-      setProduct(data);
-    }
-    fetchproduct();
-  }, []);
+  
+dispatch(listProductDetails(id))
+
+  }, [dispatch,params]);
   return (
     <Container>
     <div>
@@ -24,7 +25,12 @@ function ProductScreen({params}) {
       </Link>
 
 
-      <Row>
+      {loading?(
+        <Loader/>
+      ): error?(
+        <Message variant='danger'>{error}</Message>
+      ):(
+        <Row>
         <Col md={6}>
           <Image src={product.image} alt={product.name} fluid />
         </Col>
@@ -81,6 +87,7 @@ function ProductScreen({params}) {
 
     </Row>
 
+      )}
 
     </div>
     </Container>
