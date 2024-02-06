@@ -25,6 +25,7 @@ function HomeScreen() {
     <Container>
       <br />
       <h1>Products </h1>
+      <marquee behavior="" direction="">This Course is free & valid only on ARKPROCODER youtube channel </marquee>
 
       {
         loading?(
